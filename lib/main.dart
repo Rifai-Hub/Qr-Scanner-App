@@ -56,7 +56,7 @@ class MainApp extends StatelessWidget {
         '/': (context) => const SplashScreen(),
         '/home': (context) => const HomeScreen(),
         '/create': (context) => const QrGeneratorScreen(),
-        // '/scan': (context) => const QrScannerScreen(),
+        '/scan': (context) => const QrScannerScreen(),
       },
     );
   }
