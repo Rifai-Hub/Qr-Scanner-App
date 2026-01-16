@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 
-const double kDefaultPadding = 20.0;
-const double kGridSpacing = 16.0;
+// Color
+const Color kPrimaryColor = Color(0xFF0066FF);
+const Color kAccentColor = Color(0xFF00C2FF);
+const Color kBackgroundColor = Color(0xFFFFFFFF);
+const double kDefaultPadding = 24.0;
 
 class User {
   final String name;
@@ -20,80 +23,250 @@ class HomeScreen extends StatelessWidget {
 
   static const _currentUser = User(
     name: 'Rifai Gusnian',
-    role: 'Klipper Timbothy',
-    profileImagePath: 'assets/images/profile.jpg',
+    role: 'Premium User',
+    profileImagePath: 'assets/images/wkwk.png',
   );
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: kBackgroundColor,
       appBar: AppBar(
-        title: const Text('QR S&G'),
-        backgroundColor: Colors.transparent,
+        backgroundColor: kBackgroundColor,
         elevation: 0,
+        centerTitle: false,
+
+        title: Padding(
+          padding: const EdgeInsets.only(left: 8.0),
+          child: ShaderMask(
+            shaderCallback: (bounds) => const LinearGradient(
+              colors: [kPrimaryColor, kAccentColor],
+              begin: Alignment.centerLeft,
+              end: Alignment.centerRight,
+            ).createShader(bounds),
+            child: const Text(
+              'QRID',
+              style: TextStyle(
+                color: Colors.white,
+                fontWeight: FontWeight.w900,
+                fontSize: 26,
+                fontFamily: 'SF Pro',
+                letterSpacing: -1.2,
+              ),
+            ),
+          ),
+        ),
         actions: [
-          IconButton(
-            icon: const Icon(Icons.settings_outlined),
-            onPressed: () {}, // TODO: Settings screen
+          Padding(
+            padding: const EdgeInsets.only(right: 12),
+            child: IconButton(
+              icon: const Icon(
+                Icons.notifications_none_rounded,
+                color: Colors.black,
+                size: 28,
+              ),
+              onPressed: () {},
+            ),
           ),
         ],
       ),
-      body: Padding(
+      body: SingleChildScrollView(
+        physics: const BouncingScrollPhysics(),
         padding: const EdgeInsets.symmetric(horizontal: kDefaultPadding),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            UserProfileHeader(user: _currentUser),
-            const SizedBox(height: 24),
-            const Text(
-              'Welcome to',
-              style: TextStyle(fontSize: 20, color: Colors.grey),
-            ),
-            const Text(
-              'QR S&G',
-              style: TextStyle(
-                fontSize: 32,
-                fontWeight: FontWeight.bold,
-                letterSpacing: 1.2,
+            const SizedBox(height: 10),
+            const UserProfileHeader(user: _currentUser),
+            const SizedBox(height: 30),
+
+            // --- HERO BANNER QRID ---
+            Container(
+              width: double.infinity,
+              height: 180,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(32),
+                gradient: const LinearGradient(
+                  colors: [kPrimaryColor, kAccentColor],
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                ),
+                boxShadow: [
+                  BoxShadow(
+                    color: kPrimaryColor.withOpacity(0.3),
+                    blurRadius: 20,
+                    offset: const Offset(0, 10),
+                  ),
+                ],
               ),
-            ),
-            const SizedBox(height: 32),
-            Expanded(
-              child: GridView.count(
-                crossAxisCount: 2,
-                mainAxisSpacing: kGridSpacing,
-                crossAxisSpacing: kGridSpacing,
-                childAspectRatio: 1.0,
-                children: const [
-                  _MenuButton(
-                    icon: Icons.qr_code_2,
-                    label: 'Create',
-                    color: Colors.blueAccent,
-                    route: '/create',
+              child: Stack(
+                children: [
+                  Positioned(
+                    right: -50,
+                    top: -50,
+                    child: CircleAvatar(
+                      radius: 100,
+                      backgroundColor: Colors.white.withOpacity(0.1),
+                    ),
                   ),
-                  _MenuButton(
-                    icon: Icons.qr_code_scanner,
-                    label: 'Scan',
-                    color: Colors.redAccent,
-                    route: '/scan',
+                  Padding(
+                    padding: const EdgeInsets.all(24.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 12,
+                            vertical: 6,
+                          ),
+                          decoration: BoxDecoration(
+                            color: Colors.white.withOpacity(0.2),
+                            borderRadius: BorderRadius.circular(100),
+                          ),
+                          child: const Text(
+                            'NEW FEATURE',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 10,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                        const SizedBox(height: 12),
+                        const Text(
+                          'Generate Faster\nwith QRID Web',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 22,
+                            fontWeight: FontWeight.w800,
+                            fontFamily: 'SF Pro',
+                            height: 1.2,
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
-                  _MenuButton(
-                    icon: Icons.send,
-                    label: 'Share',
-                    color: Colors.greenAccent,
-                    route: '', // TODO
-                  ),
-                  _MenuButton(
-                    icon: Icons.print,
-                    label: 'Print',
-                    color: Colors.purpleAccent,
-                    route: '', // TODO
+                  Positioned(
+                    right: 20,
+                    bottom: 0,
+                    child: Icon(
+                      Icons.auto_awesome,
+                      size: 140,
+                      color: Colors.white.withOpacity(0.15),
+                    ),
                   ),
                 ],
               ),
             ),
+
+            const SizedBox(height: 35),
+            const Text(
+              'Quick Actions',
+              style: TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.w800,
+                fontFamily: 'SF Pro',
+              ),
+            ),
+            const SizedBox(height: 16),
+
+            // --- MENU BUTTONS GRADIENT ---
+            Row(
+              children: const [
+                Expanded(
+                  child: _MenuButton(
+                    icon: Icons.add_box_rounded,
+                    label: 'Create',
+                    route: '/create',
+                  ),
+                ),
+                SizedBox(width: 20),
+                Expanded(
+                  child: _MenuButton(
+                    icon: Icons.qr_code_scanner_rounded,
+                    label: 'Scan',
+                    route: '/scan',
+                  ),
+                ),
+              ],
+            ),
+
+            const SizedBox(height: 35),
+            const Text(
+              'Highlights',
+              style: TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.w800,
+                fontFamily: 'SF Pro',
+              ),
+            ),
+            const SizedBox(height: 16),
+
+            _buildFeatureItem(
+              Icons.security_rounded,
+              'Secure Encryption',
+              'Your QR data is encrypted and safe.',
+            ),
+            _buildFeatureItem(
+              Icons.cloud_done_rounded,
+              'Cloud Sync',
+              'Access your history everywhere.',
+            ),
+            const SizedBox(height: 30),
           ],
         ),
+      ),
+    );
+  }
+
+  Widget _buildFeatureItem(IconData icon, String title, String subtitle) {
+    return Container(
+      margin: const EdgeInsets.only(bottom: 16),
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: Colors.grey.shade50,
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(color: Colors.grey.shade200),
+      ),
+      child: Row(
+        children: [
+          Container(
+            padding: const EdgeInsets.all(10),
+            decoration: BoxDecoration(
+              color: kPrimaryColor.withOpacity(0.08),
+              shape: BoxShape.circle,
+            ),
+            child: ShaderMask(
+              shaderCallback: (bounds) => const LinearGradient(
+                colors: [kPrimaryColor, kAccentColor],
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+              ).createShader(bounds),
+              child: Icon(icon, color: Colors.white, size: 24),
+            ),
+          ),
+          const SizedBox(width: 16),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  title,
+                  style: const TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 16,
+                  ),
+                ),
+                Text(
+                  subtitle,
+                  style: TextStyle(color: Colors.grey.shade600, fontSize: 13),
+                ),
+              ],
+            ),
+          ),
+          Icon(Icons.chevron_right_rounded, color: Colors.grey.shade400),
+        ],
       ),
     );
   }
@@ -101,34 +274,44 @@ class HomeScreen extends StatelessWidget {
 
 class UserProfileHeader extends StatelessWidget {
   const UserProfileHeader({super.key, required this.user});
-
   final User user;
 
   @override
   Widget build(BuildContext context) {
     return Row(
       children: [
-        CircleAvatar(
-          radius: 36,
-          backgroundImage: AssetImage(user.profileImagePath),
+        Container(
+          padding: const EdgeInsets.all(2),
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            border: Border.all(
+              color: kPrimaryColor.withOpacity(0.5),
+              width: 1.5,
+            ),
+          ),
+          child: CircleAvatar(
+            radius: 26,
+            backgroundImage: AssetImage(user.profileImagePath),
+          ),
         ),
-        const SizedBox(width: 16),
+        const SizedBox(width: 12),
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'Hello, Rifai Gusnian',
+              'Hi, ${user.name.split(' ')[0]}!',
               style: const TextStyle(
-                fontSize: 22,
-                fontWeight: FontWeight.bold,
+                fontSize: 18,
+                fontWeight: FontWeight.w800,
+                fontFamily: 'SF Pro',
               ),
             ),
             Text(
               user.role,
               style: TextStyle(
-                fontSize: 16,
-                color: Colors.grey[700],
-                fontWeight: FontWeight.w500,
+                fontSize: 13,
+                color: Colors.grey[600],
+                fontFamily: 'SF Pro',
               ),
             ),
           ],
@@ -142,54 +325,45 @@ class _MenuButton extends StatelessWidget {
   const _MenuButton({
     required this.icon,
     required this.label,
-    required this.color,
     required this.route,
   });
-
   final IconData icon;
   final String label;
-  final Color color;
   final String route;
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: route.isNotEmpty
-          ? () => Navigator.pushNamed(context, route)
-          : null,
+      onTap: () => Navigator.pushNamed(context, route),
       child: Container(
+        height: 140,
         decoration: BoxDecoration(
-          color: color.withOpacity(0.15),
-          borderRadius: BorderRadius.circular(24),
+          gradient: const LinearGradient(
+            colors: [kPrimaryColor, kAccentColor],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+          ),
+          borderRadius: BorderRadius.circular(28),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.05),
+              color: kPrimaryColor.withOpacity(0.25),
               blurRadius: 15,
-              offset: const Offset(0, 6),
+              offset: const Offset(0, 8),
             ),
           ],
         ),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Container(
-              padding: const EdgeInsets.all(20),
-              decoration: BoxDecoration(
-                color: color,
-                shape: BoxShape.circle,
-              ),
-              child: Icon(
-                icon,
-                color: Colors.white,
-                size: 48,
-              ),
-            ),
-            const SizedBox(height: 16),
+            Icon(icon, color: Colors.white, size: 42),
+            const SizedBox(height: 10),
             Text(
               label,
               style: const TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.w600,
+                color: Colors.white,
+                fontSize: 17,
+                fontWeight: FontWeight.bold,
+                fontFamily: 'SF Pro',
               ),
             ),
           ],

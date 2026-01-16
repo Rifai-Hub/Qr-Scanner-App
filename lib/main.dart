@@ -24,7 +24,7 @@ class MainApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      // Integrasi Device Preview
+      // Device Preview
       useInheritedMediaQuery: true,
       locale: DevicePreview.locale(context),
       builder: DevicePreview.appBuilder,
@@ -32,11 +32,10 @@ class MainApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'QRID - QR Generator & Scanner',
 
-      // Tema global menggunakan Material 3
       theme: ThemeData(
         fontFamily: 'SF Pro',
         colorScheme: ColorScheme.fromSeed(
-          seedColor: const Color(0xFF553FB8), // warna brand utama
+          seedColor: const Color(0xFF0066FF),
           brightness: Brightness.light,
         ),
         useMaterial3: true,

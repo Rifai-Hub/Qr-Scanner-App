@@ -1,6 +1,9 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 
+const Color kPrimaryColor = Color(0xFF0066FF);
+const Color kAccentColor = Color(0xFF00C2FF);
+
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
 
@@ -8,49 +11,137 @@ class SplashScreen extends StatefulWidget {
   State<SplashScreen> createState() => _SplashScreenState();
 }
 
-  class _SplashScreenState extends State<SplashScreen> {
-    @override
-    void initState() {
-      super.initState();
-      
-      Timer(const Duration(seconds: 3), () {
-        Navigator.pushReplacementNamed(context, '/home');
-      });
-    }
+class _SplashScreenState extends State<SplashScreen>
+    with SingleTickerProviderStateMixin {
+  late AnimationController _animationController;
+  late Animation<double> _fadeAnimation;
 
-    @override
+  @override
+  void initState() {
+    super.initState();
+
+    _animationController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 1500),
+    );
+    _fadeAnimation = CurvedAnimation(
+      parent: _animationController,
+      curve: Curves.easeIn,
+    );
+    _animationController.forward();
+
+    Timer(const Duration(seconds: 3), () {
+      if (mounted) {
+        Navigator.pushReplacementNamed(context, '/home');
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    _animationController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFF553FB8), // Warna brand utama
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Image.asset(
-              'assets/images/splash.png',
-              width: 180,
-              height: 180,
-            ),
-            const SizedBox(height: 24),
-            const Text(
-              'QRODE',
-              style: TextStyle(
-                color: Colors.white,
-                fontFamily: 'Manrope',
-                fontSize: 48,
-                fontWeight: FontWeight.bold,
-                letterSpacing: 2.0,
+      body: Container(
+        width: double.infinity,
+        height: double.infinity,
+
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            colors: [kPrimaryColor, kAccentColor],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+          ),
+        ),
+        child: FadeTransition(
+          opacity: _fadeAnimation,
+          child: Stack(
+            children: [
+              Positioned(
+                top: -100,
+                right: -100,
+                child: CircleAvatar(
+                  radius: 200,
+                  backgroundColor: Colors.white.withOpacity(0.05),
+                ),
               ),
-            ),
-            const SizedBox(height: 8),
-            const Text(
-              'QR Generator & Scanner',
-              style: TextStyle(
-                color: Colors.white70,
-                fontSize: 16,
+              Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.all(20),
+                      decoration: BoxDecoration(
+                        color: Colors.white.withOpacity(0.15),
+                        borderRadius: BorderRadius.circular(40),
+                        border: Border.all(
+                          color: Colors.white.withOpacity(0.2),
+                        ),
+                      ),
+                      child: Image.asset(
+                        'assets/images/splash.png',
+                        width: 120,
+                        height: 120,
+
+                        errorBuilder: (context, error, stackTrace) =>
+                            const Icon(
+                              Icons.qr_code_2_rounded,
+                              size: 100,
+                              color: Colors.white,
+                            ),
+                      ),
+                    ),
+                    const SizedBox(height: 40),
+
+                    const Text(
+                      'QRID',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontFamily: 'SF Pro',
+                        fontSize: 54,
+                        fontWeight: FontWeight.w900,
+                        letterSpacing: -2.0,
+                      ),
+                    ),
+                    const SizedBox(height: 10),
+
+                    Text(
+                      'Fast • Secure • Simple',
+                      style: TextStyle(
+                        color: Colors.white.withOpacity(0.8),
+                        fontFamily: 'SF Pro',
+                        fontSize: 16,
+                        fontWeight: FontWeight.w500,
+                        letterSpacing: 1.2,
+                      ),
+                    ),
+                  ],
+                ),
               ),
-            ),
-          ],
+
+              Positioned(
+                bottom: 50,
+                left: 0,
+                right: 0,
+                child: Center(
+                  child: SizedBox(
+                    width: 40,
+                    height: 40,
+                    child: CircularProgressIndicator(
+                      strokeWidth: 3,
+                      valueColor: AlwaysStoppedAnimation<Color>(
+                        Colors.white.withOpacity(0.5),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
