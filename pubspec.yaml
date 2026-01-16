@@ -42,7 +42,14 @@ flutter:
   assets:
     - assets/images/
     - assets/fonts/
+
   fonts:
+    - family: SF Pro
+      fonts:
+        - asset: assets/fonts/SFPRODISPLAYREGULAR.OTF
+        - asset: assets/fonts/SFPRODISPLAYBOLD.OTF
+          weight: 700
+
     - family: Manrope
       fonts:
         - asset: assets/fonts/Manrope-Regular.ttf
@@ -51,7 +58,4 @@ flutter:
         - asset: assets/fonts/Manrope-SemiBold.ttf
           weight: 600
         - asset: assets/fonts/Manrope-Bold.ttf
-          weight: 700
-        - asset: assets/fonts/SFPRODISPLAYREGULAR.OTF
-        - asset: assets/fonts/SFPRODISPLAYBOLD.OTF
           weight: 700
