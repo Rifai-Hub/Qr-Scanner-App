@@ -1,3 +1,6 @@
+import 'dart:io';
+import 'package:flutter/foundation.dart' show kIsWeb; // Pendeteksi Web
+import 'package:path_provider/path_provider.dart';
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:pretty_qr_code/pretty_qr_code.dart';
@@ -97,7 +100,6 @@ class _QrGeneratorScreenState extends State<QrGeneratorScreen> {
                 pw.SizedBox(height: 30),
                 pw.Center(child: pw.Image(qrImage, width: 300, height: 300)),
                 pw.SizedBox(height: 30),
-                // Teks "Data: ..." sudah dihapus di sini
                 pw.Spacer(),
                 pw.Divider(color: PdfColors.grey300),
                 pw.Text(
@@ -113,11 +115,37 @@ class _QrGeneratorScreenState extends State<QrGeneratorScreen> {
           },
         ),
       );
+
+      final pdfBytes = await pdf.save();
+
+      // --- LOGIKA HYBRID DOWNLOAD ---
+      if (kIsWeb) {
+        await Printing.sharePdf(
+          bytes: pdfBytes,
+          filename: 'QRID_${DateTime.now().millisecondsSinceEpoch}.pdf',
+        );
+      } else {
+        final directory = await getExternalStorageDirectory();
+        final String path =
+            "${directory!.path}/QRID_${DateTime.now().millisecondsSinceEpoch}.pdf";
+        final File file = File(path);
+        await file.writeAsBytes(pdfBytes);
+
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text("Saved to Downloads folder"),
+              backgroundColor: Colors.green,
+            ),
+          );
+        }
+      }
+
       if (mounted) Navigator.pop(context);
-      await Printing.layoutPdf(onLayout: (format) async => pdf.save());
+      await Printing.layoutPdf(onLayout: (format) async => pdfBytes);
     } catch (e) {
       if (mounted) Navigator.pop(context);
-      _showErrorSnackBar("Failed to create PDF");
+      _showErrorSnackBar("Error processing PDF: $e");
     }
   }
 
